@@ -7,6 +7,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 import Services from 'views/Services/Services';
 import Header from 'components/Header/Header';
+import Navbar from 'components/Navbar/Navbar';
 
 const client = new ApolloClient({
   uri: `${ process.env.REACT_APP_API }/graphql`,
@@ -17,6 +18,7 @@ const Root = () => (
     <GlobalStyle />
     <Router history={History}>
       <Header />
+      <Navbar />
       <Switch>
         <Route exact path={ROUTES.home} component={null} />
         <Route exact path={ROUTES.services} component={Services} />

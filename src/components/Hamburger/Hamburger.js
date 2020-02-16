@@ -22,6 +22,7 @@ const Interceptor = styled.div`
   height: 100vh;
   padding-left: calc(100vw - 27.5rem);
   transform: translateX(100vw);
+  z-index: 999;
 
   &.opened {
     display: block;
