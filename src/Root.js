@@ -6,6 +6,7 @@ import History from 'utils/History/History';
 import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 import Services from 'views/Services/Services';
+import Home from 'views/Home/Home';
 import Header from 'components/Header/Header';
 import Navbar from 'components/Navbar/Navbar';
 
@@ -20,7 +21,7 @@ const Root = () => (
       <Header />
       <Navbar />
       <Switch>
-        <Route exact path={ROUTES.home} component={null} />
+        <Route exact path={ROUTES.home} component={Home} />
         <Route exact path={ROUTES.services} component={Services} />
         <Route exact path={ROUTES.contact} component={null} />
       </Switch>
