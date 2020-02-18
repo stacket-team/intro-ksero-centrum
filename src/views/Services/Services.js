@@ -1,13 +1,11 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import Service from 'components/Service/Service';
-import styled from 'styled-components';
-import Loading from 'components/Loading/Loading';
+import Search, { useSearch } from 'components/Search/Search';
 
 const FETCH_SERVICES = gql`
-  query Fetch($author: ID!) {
-    photos(author: $author) {
+  query Fetch($author: ID!, $value: String!) {
+    photos(author: $author, title: $value) {
       _id
       title
       description
@@ -16,19 +14,15 @@ const FETCH_SERVICES = gql`
   }
 `;
 
-const Wrapper = styled.div``;
-
 const Services = () => {
-  const { loading, error, data } = useQuery(FETCH_SERVICES, { variables: { author: process.env.REACT_APP_UID } });
-
-  if (!data && loading) return <Loading />;
-  if (error) return <>Error</>;
+  const { data, searchProps } = useSearch(FETCH_SERVICES, { author: process.env.REACT_APP_UID });
 
   return (
-    <Wrapper>
-      { data.photos.map(photo => <Service key={photo._id} { ...photo } />) }
-    </Wrapper>
-  )
+    <>
+      <Search {...searchProps} placeholder="SZUKAJ..." />
+      { data ? data.photos.map(photo => <Service key={photo._id} { ...photo } />) : null }
+    </>
+  );
 }
 
 export default Services;
