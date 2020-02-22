@@ -4,8 +4,8 @@ import Service from 'components/Service/Service';
 import Search, { useSearch } from 'components/Search/Search';
 
 const FETCH_SERVICES = gql`
-  query Fetch($author: ID!, $value: String!) {
-    photos(author: $author, title: $value) {
+  query Fetch($author: ID!, $tag: String!, $value: String!) {
+    photos(author: $author, tag: $tag, title: $value) {
       _id
       title
       description
@@ -15,7 +15,7 @@ const FETCH_SERVICES = gql`
 `;
 
 const Services = () => {
-  const { data, searchProps } = useSearch(FETCH_SERVICES, { author: process.env.REACT_APP_UID });
+  const { data, searchProps } = useSearch(FETCH_SERVICES, { author: process.env.REACT_APP_UID, tag: process.env.REACT_APP_SERVICE });
 
   return (
     <>

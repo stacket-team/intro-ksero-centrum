@@ -3,10 +3,19 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'utils/Routes/Routes';
 import eye from 'assets/eye.png';
-import printer from 'assets/printer.jpg';
+import { gql } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
 
-// TODO: use tags from photos-api
-const HIGHLIGHTED = [{title: 'Ksero', description: 'Ksero w formacie od A0+ do A4', src: printer},{title: 'Skan', description: 'Skan w formacie od A0+ do A4', src: printer}];
+const FETCH_HIGHLIGHTED = gql`
+  query Fetch($author: ID!, $tag: String!) {
+    photos(author: $author, tag: $tag) {
+      _id
+      title
+      description
+      src
+    }
+  }
+`;
 
 const Heading = styled.div`
   margin-top: -6rem;
@@ -63,6 +72,7 @@ const SliderBody = styled.div`
 const ServiceWrapper = styled.div`
   border-radius: 2.5rem;
   min-width: 21rem;
+  max-width: 21rem;
   height: 100%;
   margin-right: 4rem;
   background-color: #2e2e2e;
@@ -108,7 +118,7 @@ const Services = ({ services }) => (
       {services.map(({ title, description, src }, i) => (
       <ServiceWrapper key={i}>
         <ServiceTitle>{title}</ServiceTitle>
-        <ServiceImage src={src} />
+        <ServiceImage src={process.env.REACT_APP_API + src} />
         <ServiceDescription>{description}</ServiceDescription>
       </ServiceWrapper>
       ))}
@@ -117,14 +127,18 @@ const Services = ({ services }) => (
   </SliderWrapper>
 )
 
-const Home = () => (
-  <>
-    <Heading>
-      Wymarzony punkt ksero i&nbsp;opraw
-      <Small>Zakład introligatorski w Poznaniu</Small>
-    </Heading>
-    <Services services={HIGHLIGHTED} />
-  </>
-)
+const Home = () => {
+  const { loading, error, data } = useQuery(FETCH_HIGHLIGHTED, { variables: { author: process.env.REACT_APP_UID, tag: process.env.REACT_APP_HIGHLIGHTED } });
+
+  return (
+    <>
+      <Heading>
+        Wymarzony punkt ksero i&nbsp;opraw
+        <Small>Zakład introligatorski w Poznaniu</Small>
+      </Heading>
+      { !loading && !error ? <Services services={data.photos} /> : null }
+    </>
+  );
+}
 
 export default Home;
